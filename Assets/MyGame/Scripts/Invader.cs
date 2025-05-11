@@ -29,12 +29,11 @@ public class Invader : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-
         if (other.gameObject.layer == LayerMask.NameToLayer("Laser"))
         {
-            Debug.Log("Invader hit by projectile!");
+            // Debug.Log("Invader hit by projectile!");
             this.killed?.Invoke();
-            Destroy(other.gameObject);
+            // Destroy(other.gameObject);
             Destroy(this.gameObject);
         }
     }

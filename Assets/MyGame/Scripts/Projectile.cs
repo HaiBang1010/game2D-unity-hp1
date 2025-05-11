@@ -6,11 +6,12 @@ public class Projectile : MonoBehaviour
     public float speed = 25f;
     public System.Action onDestroy;
 
-    // Update is called once per frame
+
     void Update()
     {
         this.transform.position += this.transform.right * this.speed * Time.deltaTime;
 
+        // a += 3; a = a +3;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -18,6 +19,5 @@ public class Projectile : MonoBehaviour
         // if (other.CompareTag("Enemy"))
         this.onDestroy?.Invoke();
         Destroy(this.gameObject);
-
     }
 }
