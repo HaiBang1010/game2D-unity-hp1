@@ -42,7 +42,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 659576470280303333, guid: 56eb2a22d2e860548b49085fa112f51d, type: 3}
       propertyPath: m_Name
-      value: InvadersBase Variant 2
+      value: Invaders03
       objectReference: {fileID: 0}
     - target: {fileID: 6635535186044169509, guid: 56eb2a22d2e860548b49085fa112f51d, type: 3}
       propertyPath: m_Size.x

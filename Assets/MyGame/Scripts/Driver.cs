@@ -1,20 +1,25 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class Driver : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 10f;
     public Projectile laserPrefab;
-
-    public int lives;
+    // Số mạng của người chơi
+    public int lives = 3;
     public Image[] hearts;
-    private bool laserActive;
+    //làm nhấp nháy khi bị trúng đạn
+    private bool isInvincible = false;
+    public float invincibilityDuration = 1.5f; // thời gian bất tử sau khi trúng đòn
+    private SpriteRenderer spriteRenderer;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        lives = hearts.Length;
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -50,15 +55,51 @@ public class Driver : MonoBehaviour
 
     public void TakeDamage()
     {
-        lives--;
+        if (isInvincible || lives <= 0) return;
 
-        hearts[lives].gameObject.SetActive(false);
+        lives--;
+        for (int i = 0; i < hearts.Length; i++)
+        {
+            if (i < lives)
+            {
+                hearts[i].enabled = true;
+            }
+            else
+            {
+                hearts[i].enabled = false;
+            }
+        }
 
         if (lives <= 0)
         {
             // Game Over
             Debug.Log("Game Over!"); // hoặc load scene Game Over
         }
+        else
+        {
+            StartCoroutine(InvincibilityCoroutine());
+        }
+    }
+
+    IEnumerator InvincibilityCoroutine()
+    {
+        isInvincible = true;
+
+        float elapsed = 0f;
+        bool visible = true;
+
+        while (elapsed < invincibilityDuration)
+        {
+            visible = !visible;
+            spriteRenderer.enabled = visible;
+
+            yield return new WaitForSeconds(0.2f);
+            elapsed += 0.2f;
+        }
+
+        spriteRenderer.enabled = true; // bật lại nếu đang tắt
+        isInvincible = false;
+
     }
 
 }
