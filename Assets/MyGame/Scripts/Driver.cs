@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
+// dùng để điều khiển nhân vật máy bay của bản thân
 public class Driver : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 10f;
@@ -28,22 +29,23 @@ public class Driver : MonoBehaviour
         //di chuyển động của player
         float changeSteerH = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
         float changeSteerV = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
-
         transform.Translate(changeSteerH, changeSteerV, 0);
-        // transform.Rotate(0, -changeSteerV * 2, 0);
 
+        // bắn tên lửa khi nhấn phím space hoặc click chuột
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
             FireLaser();
         }
     }
 
+    // Hàm bắn tên lửa
     private void FireLaser()
     {
         Projectile projectile = Instantiate(this.laserPrefab, this.transform.position, this.laserPrefab.transform.rotation);
 
     }
 
+    // Kiểm tra va chạm với các đối tượng khác
     public void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Invader") ||
@@ -53,11 +55,13 @@ public class Driver : MonoBehaviour
         }
     }
 
+    // Hàm xử lý khi nhân vật bị trúng đạn
     public void TakeDamage()
     {
         if (isInvincible || lives <= 0) return;
 
         lives--;
+        // Cập nhật giao diện hiển thị mạng sống của nhân vật
         for (int i = 0; i < hearts.Length; i++)
         {
             if (i < lives)
@@ -70,6 +74,7 @@ public class Driver : MonoBehaviour
             }
         }
 
+        // Kiểm tra nếu mạng sống <= 0
         if (lives <= 0)
         {
             // Game Over
@@ -77,10 +82,12 @@ public class Driver : MonoBehaviour
         }
         else
         {
+            // Bật chế độ bất tử
             StartCoroutine(InvincibilityCoroutine());
         }
     }
 
+    // Coroutine để xử lý chế độ bất tử
     IEnumerator InvincibilityCoroutine()
     {
         isInvincible = true;
@@ -88,6 +95,7 @@ public class Driver : MonoBehaviour
         float elapsed = 0f;
         bool visible = true;
 
+        // Bắt đầu nhấp nháy    
         while (elapsed < invincibilityDuration)
         {
             visible = !visible;

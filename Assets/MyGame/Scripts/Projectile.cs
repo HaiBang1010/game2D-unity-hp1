@@ -9,11 +9,11 @@ public class Projectile : MonoBehaviour
 
     void Update()
     {
+        // Di chuyển tên lửa theo hướng đã chỉ định
         this.transform.position += this.transform.right * this.speed * Time.deltaTime;
-
-        // a += 3; a = a +3;
     }
 
+    // Hàm để xử lý va chạm với các đối tượng khác
     private void OnTriggerEnter2D(Collider2D other)
     {
         // if (other.CompareTag("Enemy"))

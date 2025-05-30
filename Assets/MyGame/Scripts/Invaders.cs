@@ -8,26 +8,35 @@ public class Invaders : MonoBehaviour
     public Invader[] prefabs = new Invader[4];
 
     public Projectile missilePrefab;
-    public int rows = 4, columns = 10;
-    public int totalInvaders => this.rows * this.columns;
-    public int amountLived => this.totalInvaders - this.amountKilled;
-    private float speed = 1.5f;
-    private Vector3 direction = Vector2.right;
-    public int amountKilled { get; private set; } = 0;
-    public float missileSpawnRate = 1.0f;
+    public int rows = 4, columns = 10; // 4 hàng, mỗi hàng 10 con quái vật
+
+    public int totalInvaders => this.rows * this.columns; // Tổng số quái vật
+
+    public int amountLived => this.totalInvaders - this.amountKilled; // Số quái vật còn sống
+
+    private float speed = 1.5f; // Tốc độ di chuyển của quái vật
+
+    private Vector3 direction = Vector2.right; // Hướng di chuyển của quái vật, ban đầu là sang phải
+
+    public int amountKilled { get; private set; } = 0; // Số quái vật đã bị tiêu diệt
+
+    public float missileSpawnRate = 1.0f;// Tần suất bắn tên lửa của quái vật
 
     public void Start()
     {
         SpawnInvaders();
-        InvokeRepeating(nameof(MissileAttack), missileSpawnRate, missileSpawnRate);
+        InvokeRepeating(nameof(MissileAttack), missileSpawnRate, missileSpawnRate); // Gọi hàm MissileAttack mỗi 1 giây
     }
+
 
     public void Update()
     {
+        // Di chuyển quái vật
         this.transform.position += this.direction * this.speed * Time.deltaTime;
         Vector3 leftEdge = Camera.main.ViewportToWorldPoint(Vector3.zero);
         Vector3 rightEdge = Camera.main.ViewportToWorldPoint(Vector3.right);
 
+        // Kiểm tra xem quái vật có chạm vào mép trái hoặc mép phải của màn hình
         foreach (Transform invader in this.transform)
         {
             if (!invader.gameObject.activeInHierarchy) continue;
@@ -45,15 +54,18 @@ public class Invaders : MonoBehaviour
 
     }
 
+    // Hàm để sinh ra quái vật
     private void SpawnInvaders()
     {
         for (int row = 0; row < this.rows; row++)
         {
             float height = this.columns - 1;//36
             float width = 4.0f * (this.rows - 1);//16
+
+            // Tính toán vị trí của hàng quái vật
             Vector2 center = new Vector2(-width, height / 3.5f);//-18, 8
             Vector3 rowPosition = new Vector3(center.x, row * 2.0f + center.y, 0.0f);
-
+            // Tạo ra các quái vật trong hàng   
             for (int col = 0; col < this.columns; col++)
             {
                 Invader invader = Instantiate(this.prefabs[row], this.transform);
@@ -70,7 +82,7 @@ public class Invaders : MonoBehaviour
     private void AdvanceRow()
     {
         direction.x *= -1;
-
+        // Dịch chuyển toàn bộ quái vật xuống dưới 1 khoảng
         Vector3 position = this.transform.position;
         position.y -= 1.0f;
         this.transform.position = position;
@@ -101,6 +113,7 @@ public class Invaders : MonoBehaviour
     }
     private void InvaderKilled()
     {
+        // Khi một invader bị tiêu diệt, tăng số lượng đã tiêu diệt
         this.amountKilled++;
         if (this.amountKilled >= this.totalInvaders)
         {
