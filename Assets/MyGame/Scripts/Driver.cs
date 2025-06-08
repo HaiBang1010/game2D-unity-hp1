@@ -79,6 +79,8 @@ public class Driver : MonoBehaviour
         {
             // Game Over
             Debug.Log("Game Over!"); // hoặc load scene Game Over
+            Time.timeScale = 0f;
+
         }
         else
         {
