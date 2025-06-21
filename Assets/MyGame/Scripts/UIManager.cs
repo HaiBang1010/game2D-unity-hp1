@@ -7,8 +7,19 @@ public class UIManager : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject heartPanel;
     public GameObject settingsButton;
+    public GameObject mainMenu;
 
     private bool isPaused = false;
+
+    void Start()
+    {
+        // Bắt đầu game ở trạng thái dừng, hiển thị Main Menu
+        Time.timeScale = 0f;
+        mainMenu.SetActive(true);
+        pauseMenu.SetActive(false);
+        settingsButton.SetActive(false);
+        heartPanel.SetActive(false);
+    }
 
     void Update()
     {
@@ -20,7 +31,7 @@ public class UIManager : MonoBehaviour
 
     public void TogglePause()
     {
-        isPaused = !isPaused;
+        isPaused = !isPaused; // isPaused = true; isPaused = false;
 
         pauseMenu.SetActive(isPaused);
         settingsButton.SetActive(!isPaused);
@@ -46,5 +57,13 @@ public class UIManager : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
+    }
+
+     public void StartGame()
+    {
+        mainMenu.SetActive(false);
+        heartPanel.SetActive(true);
+        settingsButton.SetActive(true);
+        Time.timeScale = 1f;
     }
 }
