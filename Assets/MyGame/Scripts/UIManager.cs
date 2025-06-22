@@ -8,6 +8,11 @@ public class UIManager : MonoBehaviour
     public GameObject heartPanel;
     public GameObject settingsButton;
     public GameObject mainMenu;
+    public GameObject gameOverMenu;
+    public Driver playerScript;
+    public GameObject player;
+    public GameObject invaders;
+    public Invaders invadersScript;
 
     private bool isPaused = false;
 
@@ -19,6 +24,10 @@ public class UIManager : MonoBehaviour
         pauseMenu.SetActive(false);
         settingsButton.SetActive(false);
         heartPanel.SetActive(false);
+        gameOverMenu.SetActive(false);
+        player.SetActive(false);
+        invaders.SetActive(false);
+        Time.timeScale = 0f;
     }
 
     void Update()
@@ -59,11 +68,26 @@ public class UIManager : MonoBehaviour
 #endif
     }
 
-     public void StartGame()
+    public void StartGame()
     {
         mainMenu.SetActive(false);
         heartPanel.SetActive(true);
         settingsButton.SetActive(true);
         Time.timeScale = 1f;
+
+        // bắt đầu animation bay lên
+        player.SetActive(true); // bật máy bay
+        invaders.SetActive(true);
+        invadersScript.SpawnInvaders();
+        playerScript.StartIntroFlight(new Vector3(0f, -10f, 0f)); // vị trí bắt đầu ở gần đáy
+    }
+
+    public void ShowGameOver()
+    {
+        Time.timeScale = 0f;
+        heartPanel.SetActive(false);
+        settingsButton.SetActive(false);
+        pauseMenu.SetActive(false);
+        gameOverMenu.SetActive(true);
     }
 }

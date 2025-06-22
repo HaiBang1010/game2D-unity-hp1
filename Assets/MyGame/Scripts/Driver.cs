@@ -2,15 +2,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Unity.VisualScripting;
+
 
 // dùng để điều khiển nhân vật máy bay của bản thân
 public class Driver : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 10f;
-    public Projectile laserPrefab;
+    private bool isStarting = false;
+    private Vector3 startTarget;
+    private UIManager uiManager; // hiển thị màn hình game over
+    [SerializeField] float moveSpeed = 10f; // tốc độ di chuyển của nhân vật
+    public Projectile laserPrefab; // tên lửa
     // Số mạng của người chơi
-    public int lives = 3;
-    public Image[] hearts;
+    public int lives = 3; // số mạng của người chơi
+    public Image[] hearts; // mạng sống của người chơi
+
     //làm nhấp nháy khi bị trúng đạn
     private bool isInvincible = false;
     public float invincibilityDuration = 1.5f; // thời gian bất tử sau khi trúng đòn
@@ -19,18 +25,50 @@ public class Driver : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        uiManager = FindObjectOfType<UIManager>();
+        if (uiManager == null)
+        {
+            Debug.LogError("UIManager not found in scene!");
+        }
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isStarting)
+        {
+            float step = moveSpeed * Time.deltaTime;
+            transform.position = Vector3.MoveTowards(transform.position, startTarget, step);
+
+            if (Vector3.Distance(transform.position, startTarget) < 0.01f)
+            {
+                isStarting = false; // kết thúc intro
+            }
+            return; // chưa cho phép điều khiển khi chưa lên tới nơi
+        }
+
         //di chuyển động của player
         float changeSteerH = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
         float changeSteerV = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
         transform.Translate(changeSteerH, changeSteerV, 0);
 
+
+        // Giới hạn vị trí theo tọa độ thế giới + padding
+        Vector3 pos = transform.position;
+
+        // Lấy giới hạn từ Camera
+        float cameraHeight = Camera.main.orthographicSize;
+        float cameraWidth = cameraHeight * Camera.main.aspect;
+
+        // Padding để điều chỉnh khoảng cách viền
+        float paddingX = 1f;
+        float paddingY = 1f;
+
+        pos.x = Mathf.Clamp(pos.x, -cameraWidth + paddingX, cameraWidth - paddingX);
+        pos.y = Mathf.Clamp(pos.y, -cameraHeight + paddingY, cameraHeight - paddingY);
+
+        transform.position = pos;
         // bắn tên lửa khi nhấn phím space hoặc click chuột
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
@@ -44,6 +82,14 @@ public class Driver : MonoBehaviour
         Projectile projectile = Instantiate(this.laserPrefab, this.transform.position, this.laserPrefab.transform.rotation);
 
     }
+
+    public void StartIntroFlight(Vector3 targetPosition)
+    {
+        startTarget = targetPosition;
+        isStarting = true;
+        transform.position = new Vector3(0f, -Camera.main.orthographicSize - 1f, 0f); // ngoài màn hình dưới
+    }
+
 
     // Kiểm tra va chạm với các đối tượng khác
     public void OnTriggerEnter2D(Collider2D other)
@@ -78,8 +124,7 @@ public class Driver : MonoBehaviour
         if (lives <= 0)
         {
             // Game Over
-            Debug.Log("Game Over!"); // hoặc load scene Game Over
-            Time.timeScale = 0f;
+            uiManager.ShowGameOver();
 
         }
         else

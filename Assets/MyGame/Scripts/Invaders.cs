@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class Invaders : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class Invaders : MonoBehaviour
 
     public void Start()
     {
-        SpawnInvaders();
+
         InvokeRepeating(nameof(MissileAttack), missileSpawnRate, missileSpawnRate); // Gọi hàm MissileAttack mỗi 1 giây
     }
 
@@ -55,7 +56,7 @@ public class Invaders : MonoBehaviour
     }
 
     // Hàm để sinh ra quái vật
-    private void SpawnInvaders()
+    public void SpawnInvaders()
     {
         for (int row = 0; row < this.rows; row++)
         {
@@ -75,10 +76,29 @@ public class Invaders : MonoBehaviour
 
                 position.x += col * 3.0f;
                 position.y += row * 1.5f;
-                invader.transform.position = position;
+                Vector3 startPos = position + new Vector3((col % 2 == 0 ? -10f : 10f), 0f, 0f);
+                invader.transform.position = startPos;
+                StartCoroutine(MoveInvaderToPosition(invader.transform, position));
             }
         }
     }
+
+    private IEnumerator MoveInvaderToPosition(Transform invader, Vector3 targetPos)
+    {
+        float duration = 1.5f;
+        float elapsed = 0f;
+        Vector3 start = invader.position;
+
+        while (elapsed < duration)
+        {
+            invader.position = Vector3.Lerp(start, targetPos, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        invader.position = targetPos;
+    }
+
     private void AdvanceRow()
     {
         direction.x *= -1;
