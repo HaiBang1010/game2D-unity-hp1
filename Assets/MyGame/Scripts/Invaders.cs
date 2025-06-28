@@ -23,12 +23,20 @@ public class Invaders : MonoBehaviour
 
     public float missileSpawnRate = 1.0f;// Tần suất bắn tên lửa của quái vật
 
-    public void Start()
-    {
+    public void Start()    {    }
 
-        InvokeRepeating(nameof(MissileAttack), missileSpawnRate, missileSpawnRate); // Gọi hàm MissileAttack mỗi 1 giây
+
+    public void BeginInvaders()
+    {
+        SpawnInvaders();
+        StartCoroutine(StartMissileAttackAfterDelay(2f)); // delay 2 giây
     }
 
+    private IEnumerator StartMissileAttackAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        InvokeRepeating(nameof(MissileAttack), missileSpawnRate, missileSpawnRate);
+    }
 
     public void Update()
     {

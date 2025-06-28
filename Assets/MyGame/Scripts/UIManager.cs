@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject heartPanel;
     public GameObject settingsButton;
+
     public GameObject mainMenu;
     public GameObject gameOverMenu;
     public Driver playerScript;
@@ -18,16 +19,25 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        // Bắt đầu game ở trạng thái dừng, hiển thị Main Menu
-        Time.timeScale = 0f;
-        mainMenu.SetActive(true);
-        pauseMenu.SetActive(false);
-        settingsButton.SetActive(false);
-        heartPanel.SetActive(false);
-        gameOverMenu.SetActive(false);
-        player.SetActive(false);
-        invaders.SetActive(false);
-        Time.timeScale = 0f;
+        int auto = PlayerPrefs.GetInt("AutoStart", 0);
+        if (auto == 1)
+        {
+            PlayerPrefs.SetInt("AutoStart", 0);
+            StartGame(); // gọi lại hàm như khi nhấn Play
+        }
+        else
+        {
+            Time.timeScale = 0f;
+            mainMenu.SetActive(true);
+            pauseMenu.SetActive(false);
+            settingsButton.SetActive(false);
+            heartPanel.SetActive(false);
+            gameOverMenu.SetActive(false);
+            player.SetActive(false);
+            invaders.SetActive(false);
+            Time.timeScale = 0f;
+        }
+
     }
 
     void Update()
@@ -54,8 +64,10 @@ public class UIManager : MonoBehaviour
         TogglePause();
     }
 
+
     public void RestartGame()
     {
+        PlayerPrefs.SetInt("AutoStart", 1);
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -68,18 +80,33 @@ public class UIManager : MonoBehaviour
 #endif
     }
 
+    void OnApplicationQuit()
+    {
+        PlayerPrefs.DeleteAll(); // Xóa toàn bộ dữ liệu PlayerPrefs
+        PlayerPrefs.Save();      // Đảm bảo ghi rằng đã xóa vào ổ đĩa
+        Debug.Log("Đã giải phóng dữ liệu PlayerPrefs khi thoát game.");
+    }
+
     public void StartGame()
     {
         mainMenu.SetActive(false);
         heartPanel.SetActive(true);
         settingsButton.SetActive(true);
+        pauseMenu.SetActive(false);
+        gameOverMenu.SetActive(false);
         Time.timeScale = 1f;
 
         // bắt đầu animation bay lên
         player.SetActive(true); // bật máy bay
         invaders.SetActive(true);
-        invadersScript.SpawnInvaders();
+        invadersScript.BeginInvaders();
         playerScript.StartIntroFlight(new Vector3(0f, -10f, 0f)); // vị trí bắt đầu ở gần đáy
+
+        // Gọi phát âm thanh background
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayMusic("BackgroundAudio");
+        }
     }
 
     public void ShowGameOver()

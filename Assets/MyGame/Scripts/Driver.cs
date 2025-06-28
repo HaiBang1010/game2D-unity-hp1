@@ -38,6 +38,7 @@ public class Driver : MonoBehaviour
     {
         if (isStarting)
         {
+            StartCoroutine(StartMoveAfterDelay(2f));
             float step = moveSpeed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, startTarget, step);
 
@@ -80,14 +81,26 @@ public class Driver : MonoBehaviour
     private void FireLaser()
     {
         Projectile projectile = Instantiate(this.laserPrefab, this.transform.position, this.laserPrefab.transform.rotation);
+        // Gọi phát âm thanh bắn laser
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX("ShootAudio");
+        }
 
     }
 
     public void StartIntroFlight(Vector3 targetPosition)
     {
         startTarget = targetPosition;
+        transform.position = new Vector3(0f, -Camera.main.orthographicSize - 10f, 0f); // ngoài màn hình dưới
         isStarting = true;
-        transform.position = new Vector3(0f, -Camera.main.orthographicSize - 1f, 0f); // ngoài màn hình dưới
+
+    }
+
+    private IEnumerator StartMoveAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
     }
 
 
