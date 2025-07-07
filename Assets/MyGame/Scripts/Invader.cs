@@ -36,5 +36,7 @@ public class Invader : MonoBehaviour
             // Destroy(other.gameObject);
             Destroy(this.gameObject);
         }
+
+        // GameManager.Instance.OnLevelComplete();
     }
 }

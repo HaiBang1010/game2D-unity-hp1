@@ -10,6 +10,8 @@ public class UIManager : MonoBehaviour
 
     public GameObject mainMenu;
     public GameObject gameOverMenu;
+
+
     public Driver playerScript;
     public GameObject player;
     public GameObject invaders;
@@ -33,13 +35,19 @@ public class UIManager : MonoBehaviour
             settingsButton.SetActive(false);
             heartPanel.SetActive(false);
             gameOverMenu.SetActive(false);
+
+
+
             player.SetActive(false);
-            invaders.SetActive(false);
-            Time.timeScale = 0f;
+            invaders?.SetActive(false);
         }
 
     }
 
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -50,10 +58,10 @@ public class UIManager : MonoBehaviour
 
     public void TogglePause()
     {
-        isPaused = !isPaused; // isPaused = true; isPaused = false;
+        isPaused = !isPaused; // false
 
-        pauseMenu.SetActive(isPaused);
-        settingsButton.SetActive(!isPaused);
+        pauseMenu.SetActive(isPaused); //flase
+        settingsButton.SetActive(!isPaused);// doi lap voi true = false
         heartPanel.SetActive(!isPaused);
 
         Time.timeScale = isPaused ? 0f : 1f;
@@ -98,14 +106,14 @@ public class UIManager : MonoBehaviour
 
         // bắt đầu animation bay lên
         player.SetActive(true); // bật máy bay
-        invaders.SetActive(true);
-        invadersScript.BeginInvaders();
+        invaders?.SetActive(true);
+        invadersScript?.BeginInvaders();
         playerScript.StartIntroFlight(new Vector3(0f, -10f, 0f)); // vị trí bắt đầu ở gần đáy
 
         // Gọi phát âm thanh background
         if (AudioManager.Instance != null)
         {
-            AudioManager.Instance.PlayMusic("BackgroundAudio");
+            AudioManager.Instance.PlayMusic("BackgoundAudio");
         }
     }
 
@@ -116,5 +124,7 @@ public class UIManager : MonoBehaviour
         settingsButton.SetActive(false);
         pauseMenu.SetActive(false);
         gameOverMenu.SetActive(true);
+
+
     }
 }

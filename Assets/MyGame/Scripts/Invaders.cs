@@ -23,7 +23,7 @@ public class Invaders : MonoBehaviour
 
     public float missileSpawnRate = 1.0f;// Tần suất bắn tên lửa của quái vật
 
-    public void Start()    {    }
+    public void Start() { }
 
 
     public void BeginInvaders()
@@ -145,8 +145,7 @@ public class Invaders : MonoBehaviour
         this.amountKilled++;
         if (this.amountKilled >= this.totalInvaders)
         {
-            Debug.Log("All invaders killed!");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            // GameManager.Instance.OnLevelComplete();
         }
     }
 }

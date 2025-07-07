@@ -33,6 +33,11 @@ public class Driver : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -138,6 +143,11 @@ public class Driver : MonoBehaviour
         {
             // Game Over
             uiManager.ShowGameOver();
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX("GameOver");
+            }
+
 
         }
         else
