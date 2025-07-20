@@ -7,6 +7,8 @@ using System.Collections;
 public class Invaders : MonoBehaviour
 {
     public Invader[] prefabs = new Invader[4];
+    public GameObject bossPrefab;
+    private bool bossSpawned = false;
 
     public Projectile missilePrefab;
     public int rows = 4, columns = 10; // 4 hàng, mỗi hàng 10 con quái vật
@@ -146,6 +148,14 @@ public class Invaders : MonoBehaviour
         if (this.amountKilled >= this.totalInvaders)
         {
             // GameManager.Instance.OnLevelComplete();
+            bossSpawned = true;
+            SpawnBoss();
         }
+    }
+
+    private void SpawnBoss()
+    {
+        Vector3 spawnPos = new Vector3(0f, Camera.main.orthographicSize - 1.5f, 0f);
+        Instantiate(bossPrefab, spawnPos, Quaternion.identity);
     }
 }
