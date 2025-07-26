@@ -1,12 +1,15 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class Boss : MonoBehaviour
 {
     public int maxHealth = 30;
     private int currentHealth;
 
+    private Slider healthSlider;
+    private GameObject healthUI;
     public float moveSpeed = 3f;
     private Vector3 direction = Vector3.right;
 
@@ -25,6 +28,27 @@ public class Boss : MonoBehaviour
     void Update()
     {
         Move();
+    }
+
+
+
+
+    public void InitBossUI(GameObject bossHealthObject)
+    {
+        this.healthUI = bossHealthObject;
+        healthUI.SetActive(true);
+
+        healthSlider = healthUI.GetComponent<Slider>();
+        if (healthSlider != null)
+        {
+
+            healthSlider.maxValue = maxHealth;
+            healthSlider.value = maxHealth;
+        }
+        else
+        {
+            Debug.LogError("Health Slider not found in Boss Health UI");
+        }
     }
 
     void Move()
@@ -71,9 +95,15 @@ public class Boss : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
+
+        if (healthSlider != null)
+            healthSlider.value = currentHealth;
+        Debug.Log("Boss Health: " + healthSlider.value);
+
         if (currentHealth <= 0)
         {
             Die();
+            UIManager.Instance.ShowWinMenu();
         }
     }
 
@@ -84,6 +114,8 @@ public class Boss : MonoBehaviour
 
         // Game Over Win, Load scene, etc.
         Destroy(this.gameObject);
+
+        healthUI.SetActive(false);
     }
 
     void OnTriggerEnter2D(Collider2D other)

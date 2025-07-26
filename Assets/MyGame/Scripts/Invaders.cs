@@ -7,6 +7,8 @@ using System.Collections;
 public class Invaders : MonoBehaviour
 {
     public Invader[] prefabs = new Invader[4];
+
+    public GameObject bossHealthUI;
     public GameObject bossPrefab;
     private bool bossSpawned = false;
 
@@ -163,6 +165,9 @@ public class Invaders : MonoBehaviour
     {
         // Vector3 spawnPos = new Vector3(0f, Camera.main.orthographicSize - 1.5f, 0f);
         Vector3 spawnPos = new Vector3(0f, 10f, 0f);
-        Instantiate(bossPrefab, spawnPos, Quaternion.identity);
+        GameObject bossObj = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
+
+        Boss bossScript = bossObj.GetComponent<Boss>();
+        bossScript.InitBossUI(bossHealthUI);
     }
 }

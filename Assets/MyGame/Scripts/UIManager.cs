@@ -4,12 +4,14 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance;
     public GameObject pauseMenu;
     public GameObject heartPanel;
     public GameObject settingsButton;
 
     public GameObject mainMenu;
     public GameObject gameOverMenu;
+    public GameObject winMenu;
 
 
     public Driver playerScript;
@@ -35,7 +37,7 @@ public class UIManager : MonoBehaviour
             settingsButton.SetActive(false);
             heartPanel.SetActive(false);
             gameOverMenu.SetActive(false);
-
+            winMenu.SetActive(false);
 
 
             player.SetActive(false);
@@ -46,7 +48,14 @@ public class UIManager : MonoBehaviour
 
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject); // Tránh trùng lặp
+        }
     }
     void Update()
     {
@@ -72,7 +81,21 @@ public class UIManager : MonoBehaviour
         TogglePause();
     }
 
+    public void ShowWinMenu()
+    {
+        Time.timeScale = 0f;
+        heartPanel.SetActive(false);
+        settingsButton.SetActive(false);
+        pauseMenu.SetActive(false);
+        gameOverMenu.SetActive(false);
+        winMenu.SetActive(true);
 
+        // Dừng âm thanh nền
+        // if (AudioManager.Instance != null)
+        // {
+        //     AudioManager.Instance.StopMusic("BackgoundAudio");
+        // }
+    }
     public void RestartGame()
     {
         PlayerPrefs.SetInt("AutoStart", 1);
@@ -102,6 +125,7 @@ public class UIManager : MonoBehaviour
         settingsButton.SetActive(true);
         pauseMenu.SetActive(false);
         gameOverMenu.SetActive(false);
+        winMenu.SetActive(false);
         Time.timeScale = 1f;
 
         // bắt đầu animation bay lên
