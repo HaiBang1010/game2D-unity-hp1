@@ -46,22 +46,24 @@ public class Boss : MonoBehaviour
             yield return new WaitForSeconds(shootRate);
 
             // Bắn đạn tỏa ra theo các góc
-            float[] angles = new float[] { -60f, -30f, -15f, 0f, 15f, 30f, 60f };
+            float[] angles = new float[] { -60f, -40f, -20f, 0f, 20f, 40f, 60f };
             foreach (float angle in angles)
             {
                 // Tính hướng xoay từ Vector3.down (hướng xuống)
                 // Vector3 shootDirection = Quaternion.Euler(0, 0, angle) * Vector3.down;
                 // Projectile p = Instantiate(bossProjectile, transform.position, Quaternion.identity);
                 // p.direction = shootDirection;
+                Quaternion rotation = Quaternion.Euler(0, 0, angle - 90f);
+
                 // Instantiate(this.bossProjectile, transform.position, this.bossProjectile.transform.rotation);
-                Quaternion rotation = Quaternion.Euler(angle, angle, 0f);
+                Instantiate(this.bossProjectile, transform.position, rotation);
 
                 // Tạo đạn và xoay nó theo hướng
-                GameObject bulletObj = Instantiate(this.bossProjectile.gameObject, transform.position, rotation);
+                // GameObject bulletObj = Instantiate(this.bossProjectile.gameObject, transform.position, rotation);
 
                 // Gán hướng bay dựa trên góc xoay
-                Projectile bullet = bulletObj.GetComponent<Projectile>();
-                bullet.direction = rotation * Vector3.right;
+                // Projectile bullet = bulletObj.GetComponent<Projectile>();
+                // bullet.direction = rotation * Vector3.right;
             }
         }
     }
@@ -81,7 +83,7 @@ public class Boss : MonoBehaviour
             Instantiate(deathEffect, transform.position, Quaternion.identity);
 
         // Game Over Win, Load scene, etc.
-        Destroy(gameObject);
+        Destroy(this.gameObject);
     }
 
     void OnTriggerEnter2D(Collider2D other)

@@ -33,10 +33,7 @@ public class Driver : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
+
 
     // Update is called once per frame
     void Update()

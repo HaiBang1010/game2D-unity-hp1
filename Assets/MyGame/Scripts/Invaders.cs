@@ -149,13 +149,20 @@ public class Invaders : MonoBehaviour
         {
             // GameManager.Instance.OnLevelComplete();
             bossSpawned = true;
-            SpawnBoss();
+            StartCoroutine(SpawnBossDelayed());
         }
+    }
+
+    private IEnumerator SpawnBossDelayed()
+    {
+        yield return new WaitForSeconds(3f); // đợi 3 giây
+        SpawnBoss();
     }
 
     private void SpawnBoss()
     {
-        Vector3 spawnPos = new Vector3(0f, Camera.main.orthographicSize - 1.5f, 0f);
+        // Vector3 spawnPos = new Vector3(0f, Camera.main.orthographicSize - 1.5f, 0f);
+        Vector3 spawnPos = new Vector3(0f, 10f, 0f);
         Instantiate(bossPrefab, spawnPos, Quaternion.identity);
     }
 }
