@@ -31,8 +31,6 @@ public class Boss : MonoBehaviour
     }
 
 
-
-
     public void InitBossUI(GameObject bossHealthObject)
     {
         this.healthUI = bossHealthObject;
@@ -57,7 +55,7 @@ public class Boss : MonoBehaviour
 
         // Giới hạn trái phải màn hình
         float cameraWidth = Camera.main.orthographicSize * Camera.main.aspect;
-        if (transform.position.x >= cameraWidth - 1f || transform.position.x <= -cameraWidth + 1f)
+        if (transform.position.x >= cameraWidth || transform.position.x <= -cameraWidth)
         {
             direction *= -1;
         }
@@ -73,21 +71,10 @@ public class Boss : MonoBehaviour
             float[] angles = new float[] { -60f, -40f, -20f, 0f, 20f, 40f, 60f };
             foreach (float angle in angles)
             {
-                // Tính hướng xoay từ Vector3.down (hướng xuống)
-                // Vector3 shootDirection = Quaternion.Euler(0, 0, angle) * Vector3.down;
-                // Projectile p = Instantiate(bossProjectile, transform.position, Quaternion.identity);
-                // p.direction = shootDirection;
+
                 Quaternion rotation = Quaternion.Euler(0, 0, angle - 90f);
 
-                // Instantiate(this.bossProjectile, transform.position, this.bossProjectile.transform.rotation);
                 Instantiate(this.bossProjectile, transform.position, rotation);
-
-                // Tạo đạn và xoay nó theo hướng
-                // GameObject bulletObj = Instantiate(this.bossProjectile.gameObject, transform.position, rotation);
-
-                // Gán hướng bay dựa trên góc xoay
-                // Projectile bullet = bulletObj.GetComponent<Projectile>();
-                // bullet.direction = rotation * Vector3.right;
             }
         }
     }

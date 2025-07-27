@@ -106,6 +106,7 @@ public class Invaders : MonoBehaviour
             invader.position = Vector3.Lerp(start, targetPos, elapsed / duration);
             elapsed += Time.deltaTime;
             yield return null;
+
         }
 
         invader.position = targetPos;

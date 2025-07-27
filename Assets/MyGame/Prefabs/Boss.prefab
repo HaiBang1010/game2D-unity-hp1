@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9044b1b4f0eb7314fabed816a32d2bfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 30
+  maxHealth: 60
   moveSpeed: 4
   bossProjectile: {fileID: 467510255556873377, guid: 37237e3cee294f045922c1f7e9f3ec27, type: 3}
   shootRate: 1
