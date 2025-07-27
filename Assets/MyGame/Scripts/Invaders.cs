@@ -164,7 +164,7 @@ public class Invaders : MonoBehaviour
     private void SpawnBoss()
     {
         // Vector3 spawnPos = new Vector3(0f, Camera.main.orthographicSize - 1.5f, 0f);
-        Vector3 spawnPos = new Vector3(0f, 10f, 0f);
+        Vector3 spawnPos = new Vector3(0f, 8f, 0f);
         GameObject bossObj = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
 
         Boss bossScript = bossObj.GetComponent<Boss>();
